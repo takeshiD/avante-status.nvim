@@ -2,6 +2,21 @@
 local Path = require("plenary.path")
 
 local M = {}
+M.curret_chat_provier = {
+    type = "envvar",
+    value = "ANTHROPIC_API_KEY",
+    icon = "󰛄 ",
+    highlight = "AvanteIconClaude",
+    name = "Claude",
+}
+
+M.current_suggestions_provier = {
+    type = "path",
+    value = vim.fn.stdpath("data") .. "/avante/github-copilot.json",
+    icon = " ",
+    highlight = "AvanteIconCopilot",
+    name = "Copilot",
+}
 
 ---Returns true if the environment variable envname exists, false if it does not exist.
 ---@param envname string
@@ -24,21 +39,6 @@ end
 ---@return any
 local ternary = function(cond, T, F)
     if cond then return T else return F end
-end
-
----Returns the value stored in environment variable envname if it exists
----Returns F if it does not exist
----@generic T
----@param pred fun(item: T): boolean
----@param list T[]
----@return T | nil
-local member_if = function(pred, list)
-    for _, v in ipairs(list) do
-        if pred(v) then
-            return v
-        end
-    end
-    return nil
 end
 
 ---If the environment variable envname exists, returns the value stored in it.
@@ -140,8 +140,10 @@ local get_provider = function(providers, provider_type)
             local msg_head = "[avante.nvim] not set provider-type: "
             if provider_type == "chat" then
                 msg_head = "[avante.nvim] chat provider: "
+                M.curret_chat_provier = p
             elseif provider_type == "suggestions" then
                 msg_head = "[avante.nvim] suggestions provider: "
+                M.current_suggestions_provier = p
             end
             local msg_icon = p.icon
             local msg_provider = p.name
@@ -176,10 +178,10 @@ end
 
 
 M.setup = function(opts)
-    vim.print("Hello avante-status Sayho!!!")
 end
 
 M.get_chat_provider = get_chat_provider
-M.get_suggestions_provider = get_chat_provider
+M.get_suggestions_provider = get_suggestions_provider
+M.getenv_if = getenv_if
 
 return M
