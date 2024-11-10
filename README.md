@@ -30,18 +30,18 @@ lazy.nvim
   lazy = false,
   version = false, -- set this if you want to always pull the latest change
   opts = {
-    - provider = "claude",
-    + provider = reuqire("avante-status").get_chat_provider({
-    +     "azure",
-    +     "openai",
-    +     "claude",
-    + }),
-    - auto_suggestions_provider = "copilot"
-    + auto_suggestions_provider = require("avante-status").get_suggestion_provider({
-    +     "azure",
-    +     "copilot",
-    +     "claude",
-    + })
+-    provider = "claude",
++    provider = reuqire("avante-status").get_chat_provider({
++        "azure",
++        "openai",
++        "claude",
++    }),
+-    auto_suggestions_provider = "copilot"
++    auto_suggestions_provider = require("avante-status").get_suggestion_provider({
++        "azure",
++        "copilot",
++        "claude",
++    })
   },
   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
   build = "make",
@@ -51,7 +51,7 @@ lazy.nvim
     "stevearc/dressing.nvim",
     "nvim-lua/plenary.nvim",
     "MunifTanjim/nui.nvim",
-    + "takeshid/avante-status.nvim",
++   "takeshid/avante-status.nvim",
     --- The below dependencies are optional,
     "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
     "zbirenbaum/copilot.lua", -- for providers='copilot'
