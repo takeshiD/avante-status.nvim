@@ -2,21 +2,8 @@
 local Path = require("plenary.path")
 
 local M = {}
-M.curret_chat_provier = {
-    type = "envvar",
-    value = "ANTHROPIC_API_KEY",
-    icon = "󰛄 ",
-    highlight = "AvanteIconClaude",
-    name = "Claude",
-}
-
-M.current_suggestions_provier = {
-    type = "path",
-    value = vim.fn.stdpath("data") .. "/avante/github-copilot.json",
-    icon = " ",
-    highlight = "AvanteIconCopilot",
-    name = "Copilot",
-}
+M.current_chat_provdier = nil
+M.current_suggestions_provdier = nil
 
 ---Returns true if the environment variable envname exists, false if it does not exist.
 ---@param envname string
@@ -46,7 +33,7 @@ end
 ---@param envname string
 ---@param F string | nil
 ---@return string
-local getenv_if = function(envname, F)
+M.getenv_if = function(envname, F)
     F = F or nil
     return ternary(exist_envname(envname), vim.fn.getenv(envname), F)
 end
@@ -65,7 +52,7 @@ local function has_set_colors(hl_group)
   return next(hl) ~= nil
 end
 
-local setup_highlight = function()
+M.setup_highlight = function()
     vim
       .iter(Highlights)
       :filter(function(k, _)
@@ -82,42 +69,42 @@ local provider_value_map = {
     azure = {
         type = "envvar",
         value = "AZURE_OPENAI_API_KEY",
-        icon = " ",
+        icon = "",
         highlight = "AvanteIconAzure",
         name = "Azure",
     },
     claude = {
         type = "envvar",
         value = "ANTHROPIC_API_KEY",
-        icon = "󰛄 ",
+        icon = "󰛄",
         highlight = "AvanteIconClaude",
         name = "Claude",
     },
     openai = {
         type = "envvar",
         value = "OPENAI_API_KEY",
-        icon = " ",
+        icon = "",
         highlight = "AvanteIconOpenAI",
         name = "OpenAI",
     },
     copilot = {
         type = "path",
         value = vim.fn.stdpath("data") .. "/avante/github-copilot.json",
-        icon = " ",
+        icon = "",
         highlight = "AvanteIconCopilot",
         name = "Copilot",
     },
     gemini = {
         type = "envvar",
         value = "GEMINI_API_KEY",
-        icon = "󰫢 ",
+        icon = "󰫢",
         highlight = "AvanteIconGemini",
         name = "Gemini",
     },
     cohere = {
         type = "envvar",
         value = "CO_API_KEY",
-        icon = "󰺠 ",
+        icon = "󰺠",
         highlight = "AvanteIconCohere",
         name = "Cohere",
     }
@@ -137,21 +124,19 @@ local get_provider = function(providers, provider_type)
             provider = ternary(exist_path(p.value), provider, nil)
         end
         if provider ~= nil then
-            local msg_head = "[avante.nvim] not set provider-type: "
-            if provider_type == "chat" then
-                msg_head = "[avante.nvim] chat provider: "
-                M.curret_chat_provier = p
-            elseif provider_type == "suggestions" then
-                msg_head = "[avante.nvim] suggestions provider: "
-                M.current_suggestions_provier = p
-            end
-            local msg_icon = p.icon
-            local msg_provider = p.name
-            vim.api.nvim_echo({
-                {msg_head, nil},
-                {msg_icon, p.highlight},
-                {msg_provider, p.highlight},
-            }, true, {})
+            -- local msg_head = "[avante.nvim] not set provider-type: "
+            -- if provider_type == "chat" then
+                -- msg_head = "[avante.nvim] chat provider: "
+            -- elseif provider_type == "suggestions" then
+                -- msg_head = "[avante.nvim] suggestions provider: "
+            -- end
+            -- local msg_icon = p.icon
+            -- local msg_provider = p.name
+            -- vim.api.nvim_echo({
+            --     {msg_head, nil},
+            --     {msg_icon, p.highlight},
+            --     {msg_provider, p.highlight},
+            -- }, true, {})
             return tostring(provider)
         end
     end
@@ -163,25 +148,26 @@ end
 ---The provider that is set at the top has priority, so the list is sorted to set the priority.
 ---@param providers string[]
 ---@return string
-local get_chat_provider = function(providers)
-    setup_highlight()
-    return get_provider(providers, "chat")
+M.get_chat_provider = function(providers)
+    M.setup_highlight()
+    local provider = get_provider(providers, "chat")
+    M.current_chat_provider = provider_value_map[provider]
+    return provider
 end
 
 ---Returns the provider that has the first environment variable set among the providers. 
 ---The provider that is set at the top has priority, so the list is sorted to set the priority.
 ---@param providers string[]
 ---@return string
-local get_suggestions_provider = function(providers)
-    return get_provider(providers, "suggestions")
+M.get_suggestions_provider = function(providers)
+    M.setup_highlight()
+    local provider = get_provider(providers, "suggestions")
+    M.current_suggestions_provider = provider_value_map[provider]
+    return provider
 end
-
 
 M.setup = function(opts)
+    M.setup_highlight()
 end
-
-M.get_chat_provider = get_chat_provider
-M.get_suggestions_provider = get_suggestions_provider
-M.getenv_if = getenv_if
 
 return M
