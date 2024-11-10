@@ -23,7 +23,7 @@ In many cases, source code is confidential information, and sending it to a prov
 you add following setting in your `avante.nvim` config file.
 
 lazy.nvim
-```diff_lua
+```diff
 {
   "yetone/avante.nvim",
   event = "VeryLazy",
