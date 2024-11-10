@@ -1,22 +1,8 @@
 
 # Featues
 - Load any provider in order of your priority
+
 - Display active provider in the status line
-
-# Who is `avante-status.nvim` for?
-The most notable feature of `avante-status.nvim` is that it can set providers in order of priority.
-
-`avante.nvim` is wonderfully compatible with many providers. However, there are times when you want to separate providers for private use and for groups you belong to.
-
-- Use Claude, which you have personally contracted, in your private environment
-
-- Use AzureOpenAI in your company
-
-- Use LocalLLM server in another organization
-
-In many cases, source code is confidential information, and sending it to a provider itself is a leak of information.
-
-`avante-status.nvim` provides the functionality to set the appropriate provider while ensuring confidentiality.
 
 
 # Installation and Basic usage
@@ -160,24 +146,61 @@ The following example changes the Azure icon:
 ```
 
 # Displat Provider Status in statusline
+
+![avante-status with lualine](res/avante-status_statusline.png)
+
 `avante-status.nvim` provides function getting current provider status and.
 in example for lualine, following setting.
 
 lualine.nvim
-```lua
+```diff
 return {
     "nvim-lualine/lualine.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = {
+        "nvim-tree/nvim-web-devicons",
+        "takeshid/avante-status.nvim",
+    },
     config = function()
         local lualine = require("lualine")
-        local avante_component = {
+        local lsp_component = {
             function()
-                local chat = require("avante-status").provider_status.chat
-                local suggestion = require("avante-status").provider_status.suggestions
-                return chat .. " | " .. suggestions
+                local msg = ""
+                local ft = vim.bo.filetype
+                local clients = vim.lsp.get_clients({ bufnr = 0 })
+                if next(clients) == nil then
+                    return msg
+                end
+                for _, client in ipairs(clients) do
+                    local filetypes = client.config.filetypes
+                    if filetypes and vim.fn.index(filetypes, ft) ~= -1 then
+                        return client.name
+                    end
+                end
+                return msg
             end,
-            icon = "󰭻 "
+            icon = " ",
+            color = { fg = "#FF8800" },
         }
++       local avante_chat_component = {
++           function()
++               local avante_status = require("avante-status")
++               local chat = avante_status.current_chat_provider
++               -- local msg_chat = "%#" .. chat.highlight .. "#" .. chat.icon .. " " .. chat.name .. "%#StatusLine#"
++               local msg_chat = chat.icon .. " " .. chat.name
++               return msg_chat
++           end,
++           color = require("avante-status").current_chat_provider.highlight
++       }
++       local avante_suggestions_component = {
++           function()
++               local avante_status = require("avante-status")
++               local suggest = avante_status.current_suggestions_provider
++               -- local msg_suggest = "%#" .. suggest.highlight .. "#" .. suggest.icon .. " " .. suggest.name .. "%#StatusLine#"
++               local msg_suggest = suggest.icon .. " " .. suggest.name
++               return msg_suggest
++           end,
++           color = require("avante-status").current_suggestions_provider.highlight
++       }
         local config = {
             options = {
                 icons_enabled = true,
@@ -195,8 +218,9 @@ return {
                 lualine_a = { 'mode' },
                 lualine_b = { 'branch', 'diff', 'diagnostics' },
                 lualine_c = { 'filename' },
-                lualine_x = { 'encoding', 'fileformat', 'filetype', avante_component },
-                lualine_y = { 'progress' },
+-               lualine_x = { 'encoding', 'fileformat', 'filetype', lsp_component},
++               lualine_x = { 'encoding', 'fileformat', 'filetype', lsp_component, avante_chat_component, avante_suggestions_component},
+                lualine_y = { 'progress', },
                 lualine_z = { 'location' }
             },
             inactive_sections = {
@@ -212,4 +236,21 @@ return {
     end,
 }
 ```
+
+
+# Who is `avante-status.nvim` for?
+The most notable feature of `avante-status.nvim` is that it can set providers in order of priority.
+
+`avante.nvim` is wonderfully compatible with many providers. However, there are times when you want to separate providers for private use and for groups you belong to.
+
+- Use Claude, which you have personally contracted, in your private environment
+
+- Use AzureOpenAI in your company
+
+- Use LocalLLM server in another organization
+
+In many cases, source code is confidential information, and sending it to a provider itself is a leak of information.
+
+`avante-status.nvim` provides the functionality to set the appropriate provider while ensuring confidentiality.
+
 
