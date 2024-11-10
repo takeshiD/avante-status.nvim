@@ -145,7 +145,7 @@ The following example changes the Azure icon:
 }
 ```
 
-# Displat Provider Status in statusline
+# Display Provider in Statusline
 
 ![avante-status with lualine](res/avante-status_statusline.png)
 
