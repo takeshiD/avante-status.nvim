@@ -136,7 +136,7 @@ require("avante-status").provider_value_map.default = {
 
 You can change the following settings to your liking.
 The following example changes the Azure icon:
-```lua
+```diff
 {
     "takeshid/avante-status.nvim",
     event = "VeryLazy",
@@ -150,3 +150,58 @@ The following example changes the Azure icon:
     }
 }
 ```
+
+# Displat Provider Status in statusline
+`avante-status.nvim` provides function getting current provider status and.
+in example for lualine, following setting.
+
+lualine.nvim
+```lua
+return {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+        local lualine = require("lualine")
+        local avante_component = {
+            function()
+                local chat = require("avante-status").provider_status.chat
+                local suggestion = require("avante-status").provider_status.suggestions
+                return chat .. " | " .. suggestions
+            end,
+            icon = "󰭻 "
+        }
+        local config = {
+            options = {
+                icons_enabled = true,
+                theme = 'auto',
+                component_separators = '',
+                section_separators = { left = '', right = '' },
+                globalstatus = true,
+                refresh = {
+                    statusline = 500,
+                    tabline = 500,
+                    winbar = 500,
+                }
+            },
+            sections = {
+                lualine_a = { 'mode' },
+                lualine_b = { 'branch', 'diff', 'diagnostics' },
+                lualine_c = { 'filename' },
+                lualine_x = { 'encoding', 'fileformat', 'filetype', avante_component },
+                lualine_y = { 'progress' },
+                lualine_z = { 'location' }
+            },
+            inactive_sections = {
+                lualine_a = {},
+                lualine_b = {},
+                lualine_c = { 'filename' },
+                lualine_x = { 'location' },
+                lualine_y = {},
+                lualine_z = {}
+            },
+        }
+        lualine.setup(config)
+    end,
+}
+```
+
