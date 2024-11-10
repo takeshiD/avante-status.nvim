@@ -38,13 +38,14 @@ M.getenv_if = function(envname, F)
     return ternary(exist_envname(envname), vim.fn.getenv(envname), F)
 end
 
+local bg_statusline = vim.api.nvim_get_hl(0, { name = "StatusLine"}).bg
 local Highlights = {
-    AZURE   = { name = "AvanteIconAzure", fg = "#008ad7" },
-    CLAUDE = { name = "AvanteIconClaude", fg = "#d97757" },
-    OPENAI = { name = "AvanteIconOpenAI", fg = "#76a89c" },
-    COPILOT = { name = "AvanteIconCopilot", link = "Normal" },
-    GEMINI = { name = "AvanteIconGemini", fg = "#3a92db" },
-    COHERE = { name = "AvanteIconCohere", fg = "#d2a1de" },
+    AZURE   = { name = "AvanteIconAzure",   fg = "#008ad7"},
+    CLAUDE  = { name = "AvanteIconClaude",  fg = "#d97757"},
+    OPENAI  = { name = "AvanteIconOpenAI",  fg = "#76a89c"},
+    COPILOT = { name = "AvanteIconCopilot", fg = "#cccccc"},
+    GEMINI  = { name = "AvanteIconGemini",  fg = "#3a92db"},
+    COHERE  = { name = "AvanteIconCohere",  fg = "#d2a1de"},
 }
 
 local function has_set_colors(hl_group)
@@ -124,19 +125,6 @@ local get_provider = function(providers, provider_type)
             provider = ternary(exist_path(p.value), provider, nil)
         end
         if provider ~= nil then
-            -- local msg_head = "[avante.nvim] not set provider-type: "
-            -- if provider_type == "chat" then
-                -- msg_head = "[avante.nvim] chat provider: "
-            -- elseif provider_type == "suggestions" then
-                -- msg_head = "[avante.nvim] suggestions provider: "
-            -- end
-            -- local msg_icon = p.icon
-            -- local msg_provider = p.name
-            -- vim.api.nvim_echo({
-            --     {msg_head, nil},
-            --     {msg_icon, p.highlight},
-            --     {msg_provider, p.highlight},
-            -- }, true, {})
             return tostring(provider)
         end
     end
@@ -149,9 +137,9 @@ end
 ---@param providers string[]
 ---@return string
 M.get_chat_provider = function(providers)
-    M.setup_highlight()
     local provider = get_provider(providers, "chat")
     M.current_chat_provider = provider_value_map[provider]
+    M.setup_highlight()
     return provider
 end
 
@@ -160,14 +148,25 @@ end
 ---@param providers string[]
 ---@return string
 M.get_suggestions_provider = function(providers)
-    M.setup_highlight()
     local provider = get_provider(providers, "suggestions")
     M.current_suggestions_provider = provider_value_map[provider]
+    M.setup_highlight()
     return provider
 end
 
 M.setup = function(opts)
     M.setup_highlight()
 end
+
+setmetatable(M, {
+  __index = function(t, k)
+    if Highlights[k] ~= nil then
+      return Highlights[k].name
+    elseif Highlights.conflict[k] ~= nil then
+      return Highlights.conflict[k].name
+    end
+    return t[k]
+  end,
+})
 
 return M
