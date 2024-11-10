@@ -22,6 +22,14 @@ In many cases, source code is confidential information, and sending it to a prov
 # Installation and Basic usage
 you add following setting in your `avante.nvim` config file.
 
+In this example, the chat providers are limited to azure, openai, and claude, and the first provider in the list for which the environment variable is found will be returned.
+
+For example, if an environment variable for azure is found, azure will be returned, and if azure is not found but there is an environment variable for claude, claude will be returned.
+
+If none of the providers specified in the list exist, an error output and an empty string will be returned.
+
+If you want to temporarily use Claude instead of Azure, just swap the list, and remove any providers you don't want to use from the list.
+
 lazy.nvim
 ```diff
 {
