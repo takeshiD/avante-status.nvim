@@ -85,4 +85,68 @@ lazy.nvim
 ```
 
 ## Priority provider setting
+`avante-status.nvim` provides default following providers data.
 
+```lua
+require("avante-status").provider_value_map.default = {
+    azure = {
+        type = "envvar",
+        value = "AZURE_OPENAI_API_KEY",
+        icon = " ",
+        highlight = "AvanteIconAzure",
+        name = "Azure",
+    },
+    claude = {
+        type = "envvar",
+        value = "ANTHROPIC_API_KEY",
+        icon = "󰛄 ",
+        highlight = "AvanteIconClaude",
+        name = "Claude",
+    },
+    openai = {
+        type = "envvar",
+        value = "OPENAI_API_KEY",
+        icon = " ",
+        highlight = "AvanteIconOpenAI",
+        name = "OpenAI",
+    },
+    copilot = {
+        type = "path",
+        value = vim.fn.stdpath("data") .. "/avante/github-copilot.json",
+        icon = " ",
+        highlight = "AvanteIconCopilot",
+        name = "Copilot",
+    },
+    gemini = {
+        type = "envvar",
+        value = "GEMINI_API_KEY",
+        icon = "󰫢 ",
+        highlight = "AvanteIconGemini",
+        name = "Gemini",
+    },
+    cohere = {
+        type = "envvar",
+        value = "CO_API_KEY",
+        icon = "󰺠 ",
+        highlight = "AvanteIconCohere",
+        name = "Cohere",
+    }
+}
+```
+
+You can change the following settings to your liking.
+The following example changes the Azure icon:
+```lua
+{
+    "takeshid/avante-status.nvim",
+    event = "VeryLazy",
+    opts = {
+        provider_value_map = {
+            azure = {
+-               icon = " ",
++               icon = "󰠅 ",
+            },
+        }
+    }
+}
+```
