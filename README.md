@@ -253,4 +253,6 @@ In many cases, source code is confidential information, and sending it to a prov
 
 `avante-status.nvim` provides the functionality to set the appropriate provider while ensuring confidentiality.
 
-
+# License
+This project is licensed under the MIT License.
+see [LICENSE](./LICENSE)
