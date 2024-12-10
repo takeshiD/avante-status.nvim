@@ -22,6 +22,7 @@ auto_suggestions_provider = require("avante-status").get_suggestions_provider({
 ![avante-status with lualine gemini-copilot](res/avante-status_statusline_gemini_copilot.png)
 ![avante-status with lualine claude-copilot](res/avante-status_statusline_claude_copilot.png)
 ![avante-status with lualine cohere-copilot](res/avante-status_statusline_cohere_copilot.png)
+![avante-status with lualine none-none](res/avante-status_statusline_none_none.png)
 
 # Installation and Basic usage
 You add following setting in your `avante.nvim` config file.
