@@ -25,236 +25,191 @@ auto_suggestions_provider = require("avante-status").get_suggestions_provider({
 ![avante-status with lualine none-none](res/avante-status_statusline_none_none.png)
 
 # Installation and Basic usage
-You add following setting in your `avante.nvim` config file.
 
-In this example, the chat providers are limited to azure, openai, and claude, and the first provider in the list for which the environment variable is found will be returned.
-
-For example, if an environment variable for azure is found, azure will be returned, and if azure is not found but there is an environment variable for claude, claude will be returned.
-
-If none of the providers specified in the list exist, an error output and an empty string will be returned.
-
-If you want to temporarily use Claude instead of Azure, just swap the list, and remove any providers you don't want to use from the list.
-
-lazy.nvim
-```diff
-{
-  "yetone/avante.nvim",
-  event = "VeryLazy",
-  lazy = false,
-  version = false, -- set this if you want to always pull the latest change
-  opts = {
--    provider = "claude",
-+    provider = reuqire("avante-status").get_chat_provider({
-+        "azure",
-+        "openai",
-+        "claude",
-+    }),
--    auto_suggestions_provider = "copilot"
-+    auto_suggestions_provider = require("avante-status").get_suggestion_provider({
-+        "azure",
-+        "copilot",
-+        "claude",
-+    })
-  },
-  -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-  build = "make",
-  -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
-  dependencies = {
-    "nvim-treesitter/nvim-treesitter",
-    "stevearc/dressing.nvim",
-    "nvim-lua/plenary.nvim",
-    "MunifTanjim/nui.nvim",
-+   "takeshid/avante-status.nvim",
-    --- The below dependencies are optional,
-    "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-    "zbirenbaum/copilot.lua", -- for providers='copilot'
-    {
-      -- support for image pasting
-      "HakonHarnes/img-clip.nvim",
-      event = "VeryLazy",
-      opts = {
-        -- recommended settings
-        default = {
-          embed_image_as_base64 = false,
-          prompt_for_file_name = false,
-          drag_and_drop = {
-            insert_mode = true,
-          },
-          -- required for Windows users
-          use_absolute_path = true,
-        },
-      },
-    },
-    {
-      -- Make sure to set this up properly if you have lazy=true
-      'MeanderingProgrammer/render-markdown.nvim',
-      opts = {
-        file_types = { "markdown", "Avante" },
-      },
-      ft = { "markdown", "Avante" },
-    },
-  },
-}
-```
-
-## Priority provider setting
-`avante-status.nvim` provides default following providers data.
+## Set Provider in `avante.nvim spec`
+You add following setting in your `avante.nvim` spec.
 
 ```lua
-require("avante-status").provider_value_map.default = {
-    azure = {
-        type = "envvar",
-        value = "AZURE_OPENAI_API_KEY",
-        icon = " ",
-        highlight = "AvanteIconAzure",
-        name = "Azure",
+{
+    "yetone/avante.nvim",
+    dependencies = {
+        -- other dependencies
+        "takeshid/avante-status.nvim",
     },
-    claude = {
-        type = "envvar",
-        value = "ANTHROPIC_API_KEY",
-        icon = "󰛄 ",
-        highlight = "AvanteIconClaude",
-        name = "Claude",
-    },
-    openai = {
-        type = "envvar",
-        value = "OPENAI_API_KEY",
-        icon = " ",
-        highlight = "AvanteIconOpenAI",
-        name = "OpenAI",
-    },
-    copilot = {
-        type = "path",
-        value = vim.fn.stdpath("data") .. "/avante/github-copilot.json",
-        icon = " ",
-        highlight = "AvanteIconCopilot",
-        name = "Copilot",
-    },
-    gemini = {
-        type = "envvar",
-        value = "GEMINI_API_KEY",
-        icon = "󰫢 ",
-        highlight = "AvanteIconGemini",
-        name = "Gemini",
-    },
-    cohere = {
-        type = "envvar",
-        value = "CO_API_KEY",
-        icon = "󰺠 ",
-        highlight = "AvanteIconCohere",
-        name = "Cohere",
-    }
+    opts = function()
+        require("avante").setup({
+            provider = require("avante-status").get_chat_provider({
+                "azure",
+                "claude",
+                "openai",
+            }),
+            auto_suggestions_provider = require("avante-status").get_suggestions_provider({
+                "azure",
+                "copilot",
+                "claude",
+                "openai",
+            }),
+        -- other opts
+    end
 }
 ```
 
-You can change the following settings to your liking.
-The following example changes the Azure icon:
+<details>
+<summary>See full spec</summary>
+
 ```diff
 {
-    "takeshid/avante-status.nvim",
+    "yetone/avante.nvim",
+    enabled = true,
     event = "VeryLazy",
-    opts = {
-        provider_value_map = {
-            azure = {
--               icon = " ",
-+               icon = "󰠅 ",
+    lazy = false,
+    version = false, -- set this if you want to always pull the latest change
+    dependencies = {
+        "nvim-treesitter/nvim-treesitter",
+        "stevearc/dressing.nvim",
+        "nvim-lua/plenary.nvim",
+        "MunifTanjim/nui.nvim",
+        --- The below dependencies are optional,
+        "nvim-tree/nvim-web-devicons",
+        "zbirenbaum/copilot.lua", -- for providers='copilot'
+        "takeshid/avante-status.nvim",
+        {
+            "HakonHarnes/img-clip.nvim",
+            event = "VeryLazy",
+            opts = {
+                default = {
+                    embed_image_as_base64 = false,
+                    prompt_for_file_name = false,
+                    drag_and_drop = {
+                        insert_mode = true,
+                    },
+                    use_absolute_path = true,
+                },
             },
-        }
-    }
+        },
+    },
+    build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false",
+    -- build = "make",
+-   opts = {
++   opts = function()
++       require("avante").setup({
+-           provider = "claude",
++           provider = require("avante-status").get_chat_provider({
++               "azure",
++               "claude",
++               "openai",
++           }),
+-           auto_suggestions_provider = "copilot",
++           auto_suggestions_provider = require("avante-status").get_suggestions_provider({
++               "azure",
++               "copilot",
++               "claude",
++               "openai",
++           }),
+            behaviour = {
+                auto_suggestions = true,
+                auto_set_highlight_group = true,
+                auto_set_keymaps = true,
+                auto_apply_diff_after_generation = true,
+                support_paste_from_clipboard = true,
+            },
+            windows = {
+                position = "right",
+                width = 40,
+                sidebar_header = {
+                    align = "center",
+                    rounded = false,
+                },
+                ask = {
+                    floating = true,
+                    start_insert = true,
+                    border = "rounded"
+                }
+            },
+            -- providers-setting
+            claude = {
+                model = "claude-3-5-sonnet-20241022", -- $3/$15, maxtokens=8192
+                -- model = "claude-3-5-haiku-20241022", -- $1/$5, maxtokens=8192
+                max_tokens = 8000,
+            },
+            copilot = {
+                model = "gpt-4o-2024-05-13",
+                max_tokens = 4096,
+            },
+            openai = {
+                model = "gpt-4o", -- $2.5/$10
+                -- model = "gpt-4o-mini", -- $0.15/$0.60
+                max_tokens = 4096,
+            },
+            azure = {
+-               endpoint = vim.fn.getenv("AZURE_OPENAI_ENDPOINT"),
++               endpoint = require("avante-status").getenv_if("AZURE_OPENAI_ENDPOINT", ""),
+-               deployment = vim.fn.getenv("AZURE_OPENAI_DEPLOY"),
++               deployment = require("avante-status").getenv_if("AZURE_OPENAI_DEPLOY", ""),
+                api_version = "2024-06-01",
+                max_tokens = 4096,
+            },
+        })
+-   }
++   end
 }
 ```
 
-# Display Provider in Statusline
+</details>
 
-![avante-status with lualine](res/avante-status_statusline.png)
+## DisplayStatus Line in `lualine.nvim spec`
+You add following setting in your `lualine.nvim` spec.
 
-`avante-status.nvim` provides function getting current provider status and.
-in example for lualine, following setting.
-
-lualine.nvim
-```diff
-return {
+```lua
+{
     "nvim-lualine/lualine.nvim",
     dependencies = {
         "nvim-tree/nvim-web-devicons",
-        "takeshid/avante-status.nvim",
+        {
+            "takeshid/avante-status.nvim",
+            lazy = false,
+        },
     },
     config = function()
         local lualine = require("lualine")
-        local lsp_component = {
+        -- other your components ... 
+        local avante_chat_component = {
             function()
-                local msg = ""
-                local ft = vim.bo.filetype
-                local clients = vim.lsp.get_clients({ bufnr = 0 })
-                if next(clients) == nil then
-                    return msg
-                end
-                for _, client in ipairs(clients) do
-                    local filetypes = client.config.filetypes
-                    if filetypes and vim.fn.index(filetypes, ft) ~= -1 then
-                        return client.name
-                    end
-                end
+                local chat = require("avante-status").chat_provider
+                local msg = chat.name
                 return msg
             end,
-            icon = " ",
-            color = { fg = "#FF8800" },
+            icon = require("avante-status").chat_provider.icon,
+            color = { fg = require("avante-status").chat_provider.fg}
         }
-+       local avante_chat_component = {
-+           function()
-+               local avante_status = require("avante-status")
-+               local chat = avante_status.current_chat_provider
-+               -- local msg_chat = "%#" .. chat.highlight .. "#" .. chat.icon .. " " .. chat.name .. "%#StatusLine#"
-+               local msg_chat = chat.icon .. " " .. chat.name
-+               return msg_chat
-+           end,
-+           color = require("avante-status").current_chat_provider.highlight
-+       }
-+       local avante_suggestions_component = {
-+           function()
-+               local avante_status = require("avante-status")
-+               local suggest = avante_status.current_suggestions_provider
-+               -- local msg_suggest = "%#" .. suggest.highlight .. "#" .. suggest.icon .. " " .. suggest.name .. "%#StatusLine#"
-+               local msg_suggest = suggest.icon .. " " .. suggest.name
-+               return msg_suggest
-+           end,
-+           color = require("avante-status").current_suggestions_provider.highlight
-+       }
+        local avante_suggestions_component = {
+            function()
+                local suggestions = require("avante-status").suggestions_provider
+                local msg = suggestions.name
+                return msg
+            end,
+            icon = require("avante-status").suggestions_provider.icon,
+            color = { fg = require("avante-status").suggestions_provider.fg }
+        }
         local config = {
             options = {
-                icons_enabled = true,
-                theme = 'auto',
-                component_separators = '',
-                section_separators = { left = '', right = '' },
-                globalstatus = true,
-                refresh = {
-                    statusline = 500,
-                    tabline = 500,
-                    winbar = 500,
-                }
+                -- your options ... 
             },
             sections = {
-                lualine_a = { 'mode' },
-                lualine_b = { 'branch', 'diff', 'diagnostics' },
-                lualine_c = { 'filename' },
--               lualine_x = { 'encoding', 'fileformat', 'filetype', lsp_component},
-+               lualine_x = { 'encoding', 'fileformat', 'filetype', lsp_component, avante_chat_component, avante_suggestions_component},
-                lualine_y = { 'progress', },
-                lualine_z = { 'location' }
+                -- your sections ... 
+                lualine_x = { 'encoding', 'fileformat', 'filetype', avante_chat_component, avante_suggestions_component },
+                -- your sections ...
             },
             inactive_sections = {
-                lualine_a = {},
-                lualine_b = {},
-                lualine_c = { 'filename' },
-                lualine_x = { 'location' },
-                lualine_y = {},
-                lualine_z = {}
+                -- your seciotns  ...
             },
         }
         lualine.setup(config)
-    end,
+    end
 }
 ```
+
+![avante-status with lualine](res/avante-status_statusline.png)
 
 
 # Who is `avante-status.nvim` for?
