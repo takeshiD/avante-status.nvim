@@ -1,12 +1,30 @@
+# Featues Overview
+## Set Provider in your priority order
+```lua
+-- chat provider
+provider = require("avante-status").get_chat_provider({
+    "azure",    -- first priority
+    "claude",   -- second priority
+    "openai",   -- third priority
+}),
+-- suggestions provider
+auto_suggestions_provider = require("avante-status").get_suggestions_provider({
+    "azure",
+    "copilot",
+    "claude",
+    "openai",
+}),
+```
+## Display Active Provider in the status line
 
-# Featues
-- Load any provider in order of your priority
-
-- Display active provider in the status line
-
+![avante-status with lualine azure-copilot](res/avante-status_statusline_azure_copilot.png)
+![avante-status with lualine openai-copilot](res/avante-status_statusline_openai_copilot.png)
+![avante-status with lualine gemini-copilot](res/avante-status_statusline_gemini_copilot.png)
+![avante-status with lualine claude-copilot](res/avante-status_statusline_claude_copilot.png)
+![avante-status with lualine cohere-copilot](res/avante-status_statusline_cohere_copilot.png)
 
 # Installation and Basic usage
-you add following setting in your `avante.nvim` config file.
+You add following setting in your `avante.nvim` config file.
 
 In this example, the chat providers are limited to azure, openai, and claude, and the first provider in the list for which the environment variable is found will be returned.
 

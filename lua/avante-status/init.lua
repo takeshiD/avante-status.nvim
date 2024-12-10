@@ -53,6 +53,14 @@ M.getenv_if = function(envname, F)
 end
 
 local provider_value_map = {
+    none = {
+        type = "none",
+        value = "none",
+        icon = "",
+        highlight = "",
+        fg = "#ffffff",
+        name = "None",
+    },
     azure = {
         type = "envvar",
         value = "AZURE_OPENAI_API_KEY",
@@ -98,8 +106,8 @@ local provider_value_map = {
         value = "CO_API_KEY",
         icon = "󰺠",
         highlight = "AvanteIconCohere",
-        fg = "#008ad7",
-        name = "#d2a1de",
+        fg = "#d2a1de",
+        name = "cohere",
     }
 }
 
@@ -131,7 +139,8 @@ end
 ---@return string
 function M.get_chat_provider(providers)
     local provider = get_provider(providers, "chat")
-    M.chat_provider = provider_value_map[provider]
+    -- M.chat_provider = provider_value_map[provider]
+    M.chat_provider = provider_value_map["none"]
     return provider
 end
 
@@ -141,8 +150,13 @@ end
 ---@return string
 function M.get_suggestions_provider(providers)
     local provider = get_provider(providers, "suggestions")
-    M.suggestions_provider = provider_value_map[provider]
+    -- M.suggestions_provider = provider_value_map[provider]
+    M.suggestions_provider = provider_value_map["none"]
     return provider
 end
 
+
+function M.setup(opts)
+
+end
 return M
