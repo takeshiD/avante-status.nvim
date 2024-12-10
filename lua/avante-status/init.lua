@@ -1,58 +1,5 @@
 -- ########### Require Library #############
-local M = {
-    chat_provider = {
-        type = "none",
-        value = "none",
-        icon = "",
-        highlight = "",
-        fg = "#ffffff",
-        name = "None",
-    },
-    suggestions_provider = {
-        type = "none",
-        value = "none",
-        icon = "",
-        highlight = "",
-        fg = "#ffffff",
-        name = "None",
-    }
-}
-
----Returns true if the environment variable envname exists, false if it does not exist.
----@param envname string
----@return boolean
-local exist_envname = function(envname)
-    return vim.fn.getenv(envname) ~= vim.v.null
-end
-
----Returns true if the path exists, false if it does not exist
----@param path string
----@return boolean
-local exist_path = function(path)
-    -- return Path:new(vim.fn.expand(path)):exists()
-    return vim.uv.fs_stat(path) ~= nil
-end
-
----Returns T if cond is true, returns F if cond is false
----@param cond boolean
----@param T any
----@param F any
----@return any;;
-local ternary = function(cond, T, F)
-    if cond then return T else return F end
-end
-
----If the environment variable envname exists, returns the value stored in it.
----If it does not exist, returns F.
----@param envname string
----@param F string | nil
----@return string
-M.getenv_if = function(envname, F)
-    F = F or nil
-    return ternary(exist_envname(envname), vim.fn.getenv(envname), F)
-end
-
-local provider_value_map = {
+local providers_map = {
     none = {
         type = "none",
         value = "none",
@@ -111,6 +58,47 @@ local provider_value_map = {
     }
 }
 
+local M = {
+    chat_provider = providers_map["none"],
+    suggestions_provider = providers_map["none"],
+    providers_map = providers_map,
+}
+
+---Returns true if the environment variable envname exists, false if it does not exist.
+---@param envname string
+---@return boolean
+local exist_envname = function(envname)
+    return vim.fn.getenv(envname) ~= vim.v.null
+end
+
+---Returns true if the path exists, false if it does not exist
+---@param path string
+---@return boolean
+local exist_path = function(path)
+    -- return Path:new(vim.fn.expand(path)):exists()
+    return vim.uv.fs_stat(path) ~= nil
+end
+
+---Returns T if cond is true, returns F if cond is false
+---@param cond boolean
+---@param T any
+---@param F any
+---@return any;;
+local ternary = function(cond, T, F)
+    if cond then return T else return F end
+end
+
+---If the environment variable envname exists, returns the value stored in it.
+---If it does not exist, returns F.
+---@param envname string
+---@param F string | nil
+---@return string
+M.getenv_if = function(envname, F)
+    F = F or nil
+    return ternary(exist_envname(envname), vim.fn.getenv(envname), F)
+end
+
+
 ---Returns the provider that has the first environment variable set among the providers.
 ---The provider that is set at the top has priority, so the list is sorted to set the priority.
 ---@param providers string[]
@@ -118,7 +106,7 @@ local provider_value_map = {
 ---@return string
 local get_provider = function(providers, provider_type)
     for _, provider in ipairs(providers) do
-        local p = provider_value_map[provider]
+        local p = M.providers_map[provider]
         if p.type == "envvar" then
             provider = ternary(exist_envname(p.value), provider, nil)
         elseif p.type == "path" then
@@ -130,7 +118,7 @@ local get_provider = function(providers, provider_type)
     end
     local unavailable_providers = vim.iter(providers):fold("", function(p1, p2) return p1 .. ", " .. p2 end)
     error("'" .. unavailable_providers .. "' for which the api-key is set cannot be obtained.")
-    return ""
+    return "none"
 end
 
 ---Returns the provider that has the first environment variable set among the providers.
@@ -139,8 +127,7 @@ end
 ---@return string
 function M.get_chat_provider(providers)
     local provider = get_provider(providers, "chat")
-    -- M.chat_provider = provider_value_map[provider]
-    M.chat_provider = provider_value_map["cohere"]
+    M.chat_provider = M.providers_map[provider]
     return provider
 end
 
@@ -150,13 +137,14 @@ end
 ---@return string
 function M.get_suggestions_provider(providers)
     local provider = get_provider(providers, "suggestions")
-    M.suggestions_provider = provider_value_map[provider]
-    -- M.suggestions_provider = provider_value_map["none"]
+    M.suggestions_provider = M.providers_map[provider]
     return provider
 end
 
-
 function M.setup(opts)
-
+    if opts["providers_map"] ~= nil then
+        M.providers_map = opts["providers_map"]
+    end
 end
+
 return M
