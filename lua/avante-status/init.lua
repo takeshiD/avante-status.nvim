@@ -107,7 +107,7 @@ local provider_value_map = {
         icon = "󰺠",
         highlight = "AvanteIconCohere",
         fg = "#d2a1de",
-        name = "cohere",
+        name = "Cohere",
     }
 }
 
@@ -140,7 +140,7 @@ end
 function M.get_chat_provider(providers)
     local provider = get_provider(providers, "chat")
     -- M.chat_provider = provider_value_map[provider]
-    M.chat_provider = provider_value_map["none"]
+    M.chat_provider = provider_value_map["cohere"]
     return provider
 end
 
@@ -150,8 +150,8 @@ end
 ---@return string
 function M.get_suggestions_provider(providers)
     local provider = get_provider(providers, "suggestions")
-    -- M.suggestions_provider = provider_value_map[provider]
-    M.suggestions_provider = provider_value_map["none"]
+    M.suggestions_provider = provider_value_map[provider]
+    -- M.suggestions_provider = provider_value_map["none"]
     return provider
 end
 
