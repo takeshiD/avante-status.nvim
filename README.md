@@ -37,7 +37,7 @@ You add following setting in your `avante.nvim` spec.
         "takeshid/avante-status.nvim",
     },
     opts = function()
-        require("avante").setup({
+        return {
             provider = require("avante-status").get_chat_provider({
                 "azure",
                 "claude",
@@ -92,7 +92,7 @@ You add following setting in your `avante.nvim` spec.
     -- build = "make",
 -   opts = {
 +   opts = function()
-+       require("avante").setup({
++       return {
 -           provider = "claude",
 +           provider = require("avante-status").get_chat_provider({
 +               "azure",
@@ -149,7 +149,7 @@ You add following setting in your `avante.nvim` spec.
                 api_version = "2024-06-01",
                 max_tokens = 4096,
             },
-        })
+        }
 -   }
 +   end
 }
