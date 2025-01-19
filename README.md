@@ -26,7 +26,7 @@ auto_suggestions_provider = require("avante-status").get_suggestions_provider({
 
 # Installation and Basic usage
 
-## Set Provider in `avante.nvim spec`
+## Set Provider in `avante.nvim` spec
 You add following setting in your `avante.nvim` spec.
 
 ```lua
@@ -157,7 +157,7 @@ You add following setting in your `avante.nvim` spec.
 
 </details>
 
-## DisplayStatus Line in `lualine.nvim spec`
+## Display StatusLine in `lualine.nvim` spec
 You add following setting in your `lualine.nvim` spec.
 
 ```lua
@@ -211,6 +211,9 @@ You add following setting in your `lualine.nvim` spec.
 
 ![avante-status with lualine](res/avante-status_statusline.png)
 
+# Customizing
+## Change Default Provider
+## Add Custom Provider
 
 # Who is `avante-status.nvim` for?
 The most notable feature of `avante-status.nvim` is that it can set providers in order of priority.
