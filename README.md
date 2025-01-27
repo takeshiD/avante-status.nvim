@@ -265,6 +265,8 @@ When you add custom provider, you have to write all options.
 },
 ```
 
+![avante-status add custom](res/avante-status_add_custom.png)
+
 # Who is `avante-status.nvim` for?
 The most notable feature of `avante-status.nvim` is that it can set providers in order of priority.
 
