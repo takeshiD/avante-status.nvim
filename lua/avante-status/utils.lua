@@ -1,4 +1,22 @@
+local curl = require('plenary.curl')
 local M = {}
+
+M.Error = function(msg, ...)
+    vim.notify('[avante-status.nvim] ' .. string.format(msg, ...), vim.log.levels.ERROR)
+end
+
+M.Warn = function(msg, ...)
+    vim.notify('[avante-status.nvim] ' .. string.format(msg, ...), vim.log.levels.WARN)
+end
+
+M.Info = function(msg, ...)
+    vim.notify('[avante-status.nvim] ' .. string.format(msg, ...), vim.log.levels.INFO)
+end
+
+
+M.Debug = function(msg, ...)
+    vim.notify('[avante-status.nvim] ' .. string.format(msg, ...), vim.log.levels.DEBUG)
+end
 
 ---Returns true if the environment variable envname exists, false if it does not exist.
 ---@param envname string

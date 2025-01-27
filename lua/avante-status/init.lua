@@ -26,25 +26,30 @@ end
 local get_provider = function(providers)
     for _, provider in ipairs(providers) do
         local p = Config.providers_map[provider]
-        if p.type == "envvar" then
-            provider = Utils.ternary(
-                Utils.exist_envname(p.value),
-                provider,
-                nil
-            )
-        elseif p.type == "path" then
-            provider = Utils.ternary(
-                Utils.exist_path(p.value),
-                provider,
-                nil
-            )
-        end
-        if provider ~= nil then
-            return tostring(provider)
+        if p == nil then
+            Utils.Warn("'%s' is undefined provider.", provider)
+        else
+            if p.type == "envvar" then
+                provider = Utils.ternary(
+                    Utils.exist_envname(p.value),
+                    provider,
+                    nil
+                )
+            elseif p.type == "path" then
+                provider = Utils.ternary(
+                    Utils.exist_path(p.value),
+                    provider,
+                    nil
+                )
+            end
+            if provider ~= nil then
+                return tostring(provider)
+            end
         end
     end
     local unavailable_providers = vim.iter(providers):fold("", function(p1, p2) return p1 .. ", " .. p2 end)
-    error("'" .. unavailable_providers .. "' for which the api-key is set cannot be obtained.")
+    -- vim.notify("[avante-status.nvim] '" .. unavailable_providers .. "' for which the api-key is set cannot be obtained.")
+    Utils.Error("'%s' are unavailable.", unavailable_providers)
     return "none"
 end
 
