@@ -26,7 +26,7 @@ auto_suggestions_provider = require("avante-status").get_suggestions_provider({
 
 # Installation and Basic usage
 
-## Set Provider in `avante.nvim spec`
+## Set Provider in `avante.nvim` spec
 You add following setting in your `avante.nvim` spec.
 
 ```lua
@@ -157,40 +157,26 @@ You add following setting in your `avante.nvim` spec.
 
 </details>
 
-## DisplayStatus Line in `lualine.nvim spec`
+## Display StatusLine in `lualine.nvim` spec
 You add following setting in your `lualine.nvim` spec.
+
+`avante-status.nvim` provide `chat_component`, `suggestions_compoentj` for  `lualine.nvim`.
+
+> Recommended : event is 'VeryLazy' for to display current provider.
 
 ```lua
 {
     "nvim-lualine/lualine.nvim",
+    event = 'VeryLazy', -- recommeded
     dependencies = {
         "nvim-tree/nvim-web-devicons",
-        {
-            "takeshid/avante-status.nvim",
-            lazy = false,
-        },
+        "takeshid/avante-status.nvim",
     },
     config = function()
         local lualine = require("lualine")
         -- other your components ... 
-        local avante_chat_component = {
-            function()
-                local chat = require("avante-status").chat_provider
-                local msg = chat.name
-                return msg
-            end,
-            icon = require("avante-status").chat_provider.icon,
-            color = { fg = require("avante-status").chat_provider.fg}
-        }
-        local avante_suggestions_component = {
-            function()
-                local suggestions = require("avante-status").suggestions_provider
-                local msg = suggestions.name
-                return msg
-            end,
-            icon = require("avante-status").suggestions_provider.icon,
-            color = { fg = require("avante-status").suggestions_provider.fg }
-        }
+        local avante_chat_component = require('avante-status.lualine').chat_component
+        local avante_suggestions_component = require('avante-status.lualine').suggestions_component
         local config = {
             options = {
                 -- your options ... 
@@ -210,6 +196,188 @@ You add following setting in your `lualine.nvim` spec.
 ```
 
 ![avante-status with lualine](res/avante-status_statusline.png)
+
+# Customizing
+
+## Default Providers
+
+`avante-status.nvim` provides default providers following like this.
+
+| ProviderName | DisplayName | Icon | Color   |
+| ------       | --------    | ---- | -----   |
+| none         | None        |     | #ffffff |
+| azure        | Azure       |     | #008ad7 |
+| claude       | Claude      | 󰛄    | #d97757 |
+| claude-haiku | Haiku       | 󰛄    | #d97757 |
+| claude-opus  | Opus        | 󰛄    | #d97757 |
+| openai       | OpenAI      |     | #76a89c |
+| copilot      | Copilot     |     | #cccccc |
+| gemini       | Gemini      | 󰫢    | #3a92db |
+| cohere       | Cohere      | 󰺠    | #d2a1de |
+
+<details>
+<summary>See Default Providers</summary>
+
+```lua
+providers_map = {
+    none = {
+        type = "none",
+        value = "none",
+        icon = "",
+        highlight = "AvanteStatusNone",
+        fg = "#ffffff",
+        name = "None",
+    },
+    azure = {
+        type = "envvar",
+        value = "AZURE_OPENAI_API_KEY",
+        icon = "",
+        highlight = "AvanteStatusAzure",
+        fg = "#008ad7",
+        name = "Azure",
+    },
+    claude = {
+        type = "envvar",
+        value = "ANTHROPIC_API_KEY",
+        icon = "󰛄",
+        highlight = "AvanteStatusClaude",
+        fg = "#d97757",
+        name = "Claude",
+    },
+    ['claude-haiku'] = {
+        type = "envvar",
+        value = "ANTHROPIC_API_KEY",
+        icon = "󰛄",
+        highlight = "AvanteStatusClaude",
+        fg = "#d97757",
+        name = "Haiku",
+    },
+    ['claude-opus'] = {
+        type = "envvar",
+        value = "ANTHROPIC_API_KEY",
+        icon = "󰛄",
+        highlight = "AvanteStatusClaude",
+        fg = "#d97757",
+        name = "Opus",
+    },
+    openai = {
+        type = "envvar",
+        value = "OPENAI_API_KEY",
+        icon = "",
+        highlight = "AvanteStatusOpenAI",
+        fg = "#76a89c",
+        name = "OpenAI",
+    },
+    copilot = {
+        type = "path",
+        value = vim.fn.stdpath("data") .. "/avante/github-copilot.json",
+        icon = "",
+        highlight = "AvanteStatusCopilot",
+        fg = "#cccccc",
+        name = "Copilot",
+    },
+    gemini = {
+        type = "envvar",
+        value = "GEMINI_API_KEY",
+        icon = "󰫢",
+        highlight = "AvanteStatusGemini",
+        fg = "#3a92db",
+        name = "Gemini",
+    },
+    cohere = {
+        type = "envvar",
+        value = "CO_API_KEY",
+        icon = "󰺠",
+        highlight = "AvanteStatusCohere",
+        fg = "#d2a1de",
+        name = "Cohere",
+    },
+}
+```
+</details>
+
+## Configuring Providers
+by writing `opts.providers_map` as follows, You can override default providers and add custom providers.
+
+```lua
+return {
+    "yetone/avante.nvim",
+    enabled = true,
+    event = "VeryLazy",
+    lazy = false,
+    version = false, -- set this if you want to always pull the latest change
+    dependencies = {
+        -- other dependencies
+        {
+            "takeshid/avante-status.nvim",
+            dir = vim.fn.stdpath('data') .. '/develop/avante-status.nvim',
+            name = 'avante-status.nvim',
+            dev = true,
+            opts = {
+                providers_map = {
+                    -- override default provider
+                    none = {
+                        icon = "",
+                        fg = "#ff0000",
+                        name = "No Active",
+                    },
+                    ['claude-haiku'] = {
+                        icon = "󰉁",
+                        fg = "#ffd700",
+                    },
+                    -- add custom provider
+                    phi4 = {
+                        type = "endpoint",
+                        value = "http://127.0.0.1:11434/v1/chat/completions",
+                        icon = "🦙",
+                        fg = "#ffffff",
+                        name = "Ollama/phi4",
+                        model = "phi4",
+                    }
+                }
+            }
+        },
+```
+
+![avante-status override and custom](res/avante-status_override_and_custom.png)
+
+### Override Default Provider
+
+When you override default provider, you could change needed options.
+
+In following example, override only `icon`, `fg`, `name`.
+
+```lua
+providers_map = {
+    -- override default provider
+    none = {
+        icon = "",             -- default '"'
+        fg = "#ff0000",         -- default '#ffffff' is white
+        name = "No Active",     -- default 'None'
+    },
+    ['claude-haiku'] = {
+        icon = "󰉁",             -- default ''
+        fg = "#ffd700",
+    },
+}
+```
+
+
+### Add Custom Provider
+When you add custom provider, you have to write all options and addition `model`.
+
+This example is phi4 on ollama.
+
+```lua
+phi4 = {
+    type = "endpoint",
+    value = "http://127.0.0.1:11434/v1/chat/completions",
+    icon = "🦙",
+    fg = "#ffffff",
+    name = "Ollama/phi4",
+    model = "phi4",
+}
+```
 
 
 # Who is `avante-status.nvim` for?
