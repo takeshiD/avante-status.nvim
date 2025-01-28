@@ -40,12 +40,12 @@ end
 M.available_endpoint = function(url, model)
     local data = string.format('{"model": "%s", "messages": [{"role":"user", "content":"hello"}]}', model)
     local curl_command = {'curl', url, '-d', data}
-    local job = vim.system(curl_command, { text=false, timeout=500}):wait()
+    local job = vim.system(curl_command, { text=false, timeout=3000}):wait()
     if job.code == 0 then
         local response = vim.json.decode(job.stdout)
         if response.error ~= nil then
             -- BadRequest
-            -- M.Error("BadRequest: %s", response.error.message)
+            M.Error("BadRequest: %s", response.error.message)
             return false
         else
             -- Success
@@ -53,7 +53,7 @@ M.available_endpoint = function(url, model)
         end
     else
         -- ConnectionFailed
-        -- M.Error("ConnectionFailed: %s, Model '%s'", url, model)
+        M.Error("ConnectionFailed(%d): %s, Model '%s'", job.code, url, model)
         return false
     end
 end
