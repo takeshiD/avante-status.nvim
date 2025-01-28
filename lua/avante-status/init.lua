@@ -41,6 +41,12 @@ local get_provider = function(providers)
                     provider,
                     nil
                 )
+            elseif p.type == "endpoint" then
+                provider = Utils.ternary(
+                    Utils.available_endpoint(p.value, p.model),
+                    provider,
+                    nil
+                )
             end
             if provider ~= nil then
                 return tostring(provider)
@@ -71,14 +77,6 @@ M.get_suggestions_provider = function(providers)
     local provider = get_provider(providers)
     Config.suggestions_provider = Config.providers_map[provider]
     return provider
-end
-
-M.chat_provider = function()
-    return Config.chat_provider
-end
-
-M.suggestions_provider = function()
-    return Config.chat_provider
 end
 
 M.setup = function(opts)

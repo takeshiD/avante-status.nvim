@@ -69,7 +69,7 @@ local providers_map = {
         type = "envvar",
         value = "CO_API_KEY",
         icon = "󰺠",
-        highlight = "AvanteStatusohere",
+        highlight = "AvanteStatusCohere",
         fg = "#d2a1de",
         name = "Cohere",
     },
