@@ -230,21 +230,36 @@ You add following setting in your `lualine.nvim` spec.
 
 `avante-status.nvim` provides default providers following like this.
 
-| ProviderName | Display                    | Color                                                                 |
-| ------       | --------                   | -----                                                                 |
-| none         | ![](res/none.png)          | ![](https://via.placeholder.com/16/ffffff/FFFFFF/?text=%20)`#ffffff`  |
-| azure        | ![](res/azure.png)         | ![](https://via.placeholder.com/16/008ad7/FFFFFF/?text=%20)`#008ad7` |
-| claude       | ![](res/claude_sonnet.png) | ![](https://via.placeholder.com/16/d97757/FFFFFF/?text=%20)`#d97757` |
-| claude-haiku | ![](res/claude_haiku.png)  | ![](https://via.placeholder.com/16/d97757/FFFFFF/?text=%20)`#d97757` |
-| claude-opus  | ![](res/claude_opus.png)   | ![](https://via.placeholder.com/16/d97757/FFFFFF/?text=%20)`#d97757` |
-| openai       | ![](res/openai.png)        | ![](https://via.placeholder.com/16/76a89c/FFFFFF/?text=%20)`#76a89c` |
-| copilot      | ![](res/copilot.png)       | ![](https://via.placeholder.com/16/cccccc/FFFFFF/?text=%20)`#cccccc` |
-| gemini       | ![](res/gemini.png)        | ![](https://via.placeholder.com/16/3a92db/FFFFFF/?text=%20)`#3a92db` |
-| cohere       | ![](res/cohere.png)        | ![](https://via.placeholder.com/16/d2a1de/FFFFFF/?text=%20)`#d2a1de` |
+| ProviderName | Display                    | Color     |
+| ------       | --------                   | -----     |
+| none         | ![](res/none.png)          | `#ffffff` |
+| azure        | ![](res/azure.png)         | `#008ad7` |
+| claude       | ![](res/claude_sonnet.png) | `#d97757` |
+| claude-haiku | ![](res/claude_haiku.png)  | `#d97757` |
+| claude-opus  | ![](res/claude_opus.png)   | `#d97757` |
+| openai       | ![](res/openai.png)        | `#76a89c` |
+| copilot      | ![](res/copilot.png)       | `#cccccc` |
+| gemini       | ![](res/gemini.png)        | `#3a92db` |
+| cohere       | ![](res/cohere.png)        | `#d2a1de` |
 
+provider has `type`, `value`, `icon`, `fg`, `name` attributes.
+
+```lua
+your_provider = {
+    type = 'envvar',        -- `envvar` | `path` | `endpoint`
+    value = 'YOUR_ENVVAR',  
+    -- type is `envvar`   -> value must be ENVIRONMENT_NAME
+    -- type is `path`     -> value must be your/path/local
+    -- type is `endpoint` -> value must be llm-endpoint like `http://127.0.0.1:14344/v1/chat/completions`
+    icon = '☺️',
+    fg = '#dd00ff',
+    name = 'Smile'          -- Display Name
+```
 
 <details>
 <summary>See Default Providers</summary>
+
+> Warning! : `highlight` attribute is not used. saving For future use.
 
 ```lua
 providers_map = {
