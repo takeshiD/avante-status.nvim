@@ -232,8 +232,8 @@ You add following setting in your `lualine.nvim` spec.
 
 | ProviderName | Display                    | Color                                                                |
 | ------       | --------                   | -----                                                                |
-| none         | None                       | <span style="background-color: #ffffff;color: #000000>#ffffff</span> |
-| azure        | Azure                      | <span style="background-color: #008ad7;color: #ffffff>#008ad7</span> |
+| none         | None                       | <span style="background-color: #ffffff;color: #000000">#ffffff</span> |
+| azure        | Azure                      | <span style="background-color: #008ad7;color: #ffffff">#008ad7</span> |
 | claude       | ![](res/claude_sonnet.png) | #d97757                                                              |
 | claude-haiku | ![](res/claude_haiku.png)  | #d97757                                                              |
 | claude-opus  | ![](res/claude_opus.png)   | #d97757                                                              |
