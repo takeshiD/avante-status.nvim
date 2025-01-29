@@ -26,7 +26,7 @@ auto_suggestions_provider = require("avante-status").get_suggestions_provider({
 
 # Installation and Basic usage
 
-## Set Provider in `avante.nvim` spec
+## Setting provider with your priority
 You add following setting in your `avante.nvim` spec.
 
 ```lua
@@ -53,6 +53,22 @@ You add following setting in your `avante.nvim` spec.
     end
 }
 ```
+
+
+`avante-status.nvim` provides `getenv_if` function.
+This function is well used for `Azure` or your custom provider.
+
+```lua
+azure = {
+    endpoint = require("avante-status").getenv_if("AZURE_OPENAI_ENDPOINT", ""),
+    deployment = require("avante-status").getenv_if("AZURE_OPENAI_DEPLOY", ""),
+    api_version = "2024-06-01",
+    max_tokens = 4096,
+}
+```
+
+`getenv_if(envname: string, F: string | nil): string` check `envname` environment variable, so return `envname` if the environment variable envname exists, return `F` if it don't exist.
+
 
 <details>
 <summary>See full spec</summary>
