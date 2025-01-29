@@ -59,6 +59,7 @@ You add following setting in your `avante.nvim` spec.
 This function is well used for `Azure` or your custom provider.
 
 ```lua
+---getenv_if(envname: string, F: string | nil): string
 azure = {
     endpoint = require("avante-status").getenv_if("AZURE_OPENAI_ENDPOINT", ""),
     deployment = require("avante-status").getenv_if("AZURE_OPENAI_DEPLOY", ""),
@@ -67,7 +68,7 @@ azure = {
 }
 ```
 
-`getenv_if(envname: string, F: string | nil): string` check `envname` environment variable, so return `envname` if the environment variable envname exists, return `F` if it don't exist.
+`getenv_if(envname, F)` check `envname` environment variable, so return `envname` if the environment variable envname exists, return `F` if it don't exist.
 
 
 <details>
@@ -173,12 +174,17 @@ azure = {
 
 </details>
 
-## Display StatusLine in `lualine.nvim` spec
-You add following setting in your `lualine.nvim` spec.
+## Display StatusLine Active Provider
+
+### `lualine.nvim`  
 
 `avante-status.nvim` provide `chat_component`, `suggestions_compoentj` for  `lualine.nvim`.
 
-> Recommended : event is 'VeryLazy' for to display current provider.
+You add following setting in your `lualine.nvim` spec.
+
+> **Recommend**
+> Set event to 'VeryLazy'. 
+> If you do not set it to VeryLazy, active provider may not be displayed correctly due to the timing of loading.
 
 ```lua
 {
@@ -199,7 +205,12 @@ You add following setting in your `lualine.nvim` spec.
             },
             sections = {
                 -- your sections ... 
-                lualine_x = { 'encoding', 'fileformat', 'filetype', avante_chat_component, avante_suggestions_component },
+                lualine_x = {
+                    'encoding',
+                    'fileformat',
+                    'filetype',
+                    avante_chat_component,
+                    avante_suggestions_component },
                 -- your sections ...
             },
             inactive_sections = {
@@ -219,17 +230,18 @@ You add following setting in your `lualine.nvim` spec.
 
 `avante-status.nvim` provides default providers following like this.
 
-| ProviderName | DisplayName | Icon | Color   |
-| ------       | --------    | ---- | -----   |
-| none         | None        |     | #ffffff |
-| azure        | Azure       |     | #008ad7 |
-| claude       | Claude      | 󰛄    | #d97757 |
-| claude-haiku | Haiku       | 󰛄    | #d97757 |
-| claude-opus  | Opus        | 󰛄    | #d97757 |
-| openai       | OpenAI      |     | #76a89c |
-| copilot      | Copilot     |     | #cccccc |
-| gemini       | Gemini      | 󰫢    | #3a92db |
-| cohere       | Cohere      | 󰺠    | #d2a1de |
+| ProviderName | Display                    | Color                                                                  |
+| ------       | --------                   | -----                                                                  |
+| none         | None                       | <p style="background-color: #ffffff;color="#000000">#ffffff</p>        |
+| azure        | Azure                      | <p style="background-color: #008ad7;color="#ffffff">#008ad7</p>  |
+| claude       | ![](res/claude_sonnet.png) | #d97757                                                                |
+| claude-haiku | ![](res/claude_haiku.png)  | #d97757                                                                |
+| claude-opus  | ![](res/claude_opus.png)   | #d97757                                                                |
+| openai       | ![](res/openai.png)        | #76a89c                                                                |
+| copilot      | ![](res/copilot.png)       | #cccccc                                                                |
+| gemini       | ![](res/gemini.png)        | #3a92db                                                                |
+| cohere       | ![](res/cohere.png)        |
+
 
 <details>
 <summary>See Default Providers</summary>
