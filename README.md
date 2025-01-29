@@ -354,9 +354,6 @@ return {
         -- other dependencies
         {
             "takeshid/avante-status.nvim",
-            dir = vim.fn.stdpath('data') .. '/develop/avante-status.nvim',
-            name = 'avante-status.nvim',
-            dev = true,
             opts = {
                 providers_map = {
                     -- override default provider
