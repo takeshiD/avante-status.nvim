@@ -254,6 +254,7 @@ your_provider = {
     icon = '☺️',
     fg = '#dd00ff',
     name = 'Smile'          -- Display Name
+}
 ```
 
 <details>
@@ -359,11 +360,6 @@ return {
             opts = {
                 providers_map = {
                     -- override default provider
-                    none = {
-                        icon = "",
-                        fg = "#ff0000",
-                        name = "No Active",
-                    },
                     ['claude-haiku'] = {
                         icon = "󰉁",
                         fg = "#ffd700",
@@ -399,7 +395,7 @@ providers_map = {
         name = "No Active",     -- default 'None'
     },
     ['claude-haiku'] = {
-        icon = "󰉁",             -- default ''
+        icon = "󰉁",
         fg = "#ffd700",
     },
 }
