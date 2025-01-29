@@ -33,7 +33,7 @@ local get_provider = function(providers)
                 provider = Utils.ternary(
                     Utils.exist_envname(p.value),
                     provider,
-                    nil
+                   provider
                 )
             elseif p.type == "path" then
                 provider = Utils.ternary(
