@@ -230,16 +230,16 @@ You add following setting in your `lualine.nvim` spec.
 
 `avante-status.nvim` provides default providers following like this.
 
-| ProviderName | Display                    | Color                                                                  |
-| ------       | --------                   | -----                                                                  |
-| none         | None                       | <span style="background-color: #ffffff;color: "#000000">#ffffff</span> |
-| azure        | Azure                      | <span style="background-color: #008ad7;color: "#ffffff">#008ad7</span> |
-| claude       | ![](res/claude_sonnet.png) | #d97757                                                                |
-| claude-haiku | ![](res/claude_haiku.png)  | #d97757                                                                |
-| claude-opus  | ![](res/claude_opus.png)   | #d97757                                                                |
-| openai       | ![](res/openai.png)        | #76a89c                                                                |
-| copilot      | ![](res/copilot.png)       | #cccccc                                                                |
-| gemini       | ![](res/gemini.png)        | #3a92db                                                                |
+| ProviderName | Display                    | Color                                                                |
+| ------       | --------                   | -----                                                                |
+| none         | None                       | <span style="background-color: #ffffff;color: #000000>#ffffff</span> |
+| azure        | Azure                      | <span style="background-color: #008ad7;color: #ffffff>#008ad7</span> |
+| claude       | ![](res/claude_sonnet.png) | #d97757                                                              |
+| claude-haiku | ![](res/claude_haiku.png)  | #d97757                                                              |
+| claude-opus  | ![](res/claude_opus.png)   | #d97757                                                              |
+| openai       | ![](res/openai.png)        | #76a89c                                                              |
+| copilot      | ![](res/copilot.png)       | #cccccc                                                              |
+| gemini       | ![](res/gemini.png)        | #3a92db                                                              |
 | cohere       | ![](res/cohere.png)        |
 
 
